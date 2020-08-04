@@ -53,7 +53,7 @@ def getOrderHistory():
 
 
 def getOptionsHistory():
-    r = requests.get("https://api.robinhood.com/options/orders/?page_size=5000", headers={"authority": "api.robinhood.com", "authorization": "Bearer " + str(
+    r = requests.get("https://api.robinhood.com/options/orders/", headers={"authority": "api.robinhood.com", "authorization": "Bearer " + str(
         authToken), "accept": "*/*", "referer": "https://robinhood.com/", "accept-language": "en-US,en;q=0.9", "x-robinhood-api-version": "1.315.0"})
     print (r.json())
 
@@ -73,7 +73,6 @@ def getOptionsHistory():
             file.seek(0)
             json.dump(data, file)
 
-
 getOrderHistory()
 getOptionsHistory()
 
@@ -83,6 +82,8 @@ with open('options.json') as optionsFile:
 optionsExcelTranData = tablib.Dataset(title="Transactions")
 optionsExcelTranData.headers = [
     'Ticker', 'Date', 'Quantity', 'Price', 'TranType', 'Total']
+
+optionsDict = {}
 
 for oneOption in optionsJson:
     if(oneOption["state"] != "cancelled" and oneOption["state"] != "confirmed" and oneOption["state"] != "rejected"):
@@ -98,10 +99,55 @@ for oneOption in optionsJson:
         optionsExcelTranData.append(
             [option.ticker, option.date, option.quantity, option.price, option.tranType, option.totalPrice])
 
-optionsSummaryData = tablib.Dataset(title="Summary")
-optionsSummaryData.headers = ['Ticker', 'Quantity Bought', 'Total Cost', 'Avg Cost',
-                              'Quantity Sold', 'Total Sale', 'Avg Sale', 'Profit', 'Quantity in hand']
 
+         # group the stocks into dictionary for further processing
+        if option.ticker not in optionsDict:
+            optionsDict[option.ticker] = [option]
+        else:
+            optionsDict[option.ticker].append(option)
+
+optionsSummaryData = tablib.Dataset(title="Summary")
+optionsSummaryData.headers = ['Ticker', 'Quantity Bought', 'Total Cost',
+                              'Quantity Sold', 'Total Sale', 'Profit', 'Quantity in hand']
+
+# process the stocks in the dictionary and calculate P&L
+'''for key, optionList in optionsDict.iteritems():
+    # variables to create the summary data
+    totalBought = 0
+    totalCost = 0
+    totalSold = 0
+    totalSale = 0
+    profit = 0
+    quantLeft = 0
+
+    # sorting the list so that we can get the older transaction first
+    optionList.sort(key=lambda x: x.date)
+
+    for option in optionList:
+        #optionsExcelTranData.append([option.ticker, option.date, option.quantity,
+                              #option.price, option.tranType, option.totalPrice])
+
+        if(option.tranType == "buy"):
+            totalBought += float(option.quantity)
+            totalCost += float(option.totalPrice)
+        elif (option.tranType == "sell"):
+            totalSold += float(option.quantity)
+            totalSale += float(option.totalPrice)
+
+    print "Summary data for : {}".format(option.ticker)
+    print "Total Bought : {}".format(totalBought)
+    print "Total Cost : {}".format(totalCost)
+    print "Total Sold : {}".format(totalSold)
+    print "Total Sale : {}".format(totalSale)
+
+    if(totalBought == totalSold):
+        profit = totalSale - totalCost
+        quantLeft = 0
+    elif (totalSold < totalBought):
+        quantLeft = totalBought - totalSold
+        profit = totalSale - totalCost
+
+    optionsSummaryData.append([option.ticker, totalBought, totalCost, totalSold, totalSale, profit, quantLeft])'''
 
 optionsExcelBook = tablib.Databook((optionsExcelTranData, optionsSummaryData))
 
