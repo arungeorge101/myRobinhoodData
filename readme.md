@@ -1,19 +1,61 @@
-Instructions
+# MyRobinhoodData
 
-1. Download the above repo/code to a folder in your laptop
-2. Login to Robinhood on your browser
-3. Right click the page and click "Inspect". This will open up your developer console.
-4. Now in the developer console, open the Network tab and find the call /orders (https://api.robinhood.com/orders/)
-5. Right click this copy -> copy as curl. Paste this on to notepad. This should look something like this: 
+A wrapper around Robinhood API calls to export your watchlist, options history, and stocks order history to JSON, HTML, or XLS files.
 
-curl 'https://api.robinhood.com/orders/' -H 'authority: api.robinhood.com' -H 'x-robinhood-api-version: 1.315.0' -H 'sec-fetch-dest: empty' -H 'authorization: Bearer {***} -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36' -H 'dnt: 1' -H 'accept: */*' -H 'origin: https://robinhood.com' -H 'sec-fetch-site: same-site' -H 'sec-fetch-mode: cors' -H 'referer: https://robinhood.com/' -H 'accept-language: en-US,en;q=0.9' --compressed
+## Getting Started
 
-6. Copy your personal authorization token, Everything after Bearer in "authorization: Bearer {***}"
-7. Open the file rhDataAnalyzer.py. Paste the authorization token to line 28 between the quotes
-8. Now open terminal and browse to the same folder and run pip install -r requirements.txt - this is to install all the dependencies for the application.
-9. Then run  python ./rhDataAnalyzer.py from your terminal
-10. This will first call robinhood and create orders.json file with all your stock information.
-11. Next if you have options data it will create options.json
-12. This will create an excel file stockdata.xls in the same folder with all the transactions data (Name, Ticker, Date, Price, Quantity, Totalprice , TranType, Fees) 
-13. This will create an excel file optionsdata.xls in the same folder with all the transactions data (Ticker, Date, Price, Quantity, Totalprice , TranType,) 
-14. Summary sheet for stock and options data - IN PROGRESS
+### Setting up the project
+
+Download the repo/code to a folder on your laptop via the green code button. Install the dependencies listed in `requirements.txt.`
+
+```sh
+pip install -r requirements.txt
+```
+
+### Obtaining and saving your Robinhood API token
+
+1. Login to Robinhood on your browser.
+2. Right click the page and click "Inspect". This will open up your developer console.
+3. Now in the developer console, open the Network tab and search for "orders".
+4. Select the first option and scroll down until you see a section titled "Request Headers".
+
+![Walkthrough for getting Robinhood API token via Google Chrome's Network Tab](tokenWalkthrough.png)
+_You'll need the full text of that authorization sectiion. It's blacked out here for privacy._
+
+5. Copy everything that appears after "Bearer" to your clipboard. This is your API bearer token.
+6. Paste the token into `token.example.txt`. Rename the file to `token.txt`. `.gitignore` has this file ignored for your privacy to prevent it from being committed to the repo.
+
+Alternatively, instead of saving your token to `token.txt`, you can pass in this string when initializing the RobinhoodAPIWrapper class:
+
+```py
+from robinhood_api_wrapper import RobinhoodAPIWrapper
+
+if __name__ == "__main__":
+    robinhood = RobinhoodAPIWrapper("YOUR_TOKEN_HERE")
+```
+
+## Running the project
+
+`robinhood_api_wrapper.py` is set up to export your watchlist, options history, and stocks order history to HTML or XLS files. `src/main.py` is all set up for you to export all three to HTML as-is. Whether you're exporting as HTML or XLS, JSON files for the paginated API collection data will also be generated.
+
+```py
+robinhood = RobinhoodAPIWrapper()
+
+robinhood.export_watchlist_data("html")
+robinhood.export_options_data("html")
+robinhood.export_orders_data("html")
+```
+
+```sh
+python src/main.py
+```
+
+If you want to export xls instead:
+
+```py
+robinhood = RobinhoodAPIWrapper()
+
+robinhood.export_watchlist_data("xls")
+# xls is the default file format, so this will work too:
+robinhood.export_options_data()
+```
