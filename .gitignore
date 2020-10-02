@@ -1,4 +1,5 @@
 # exclude everything
+.DS_Store
 results/*
 src/__pycache__
 token.txt
