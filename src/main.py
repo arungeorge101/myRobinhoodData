@@ -6,6 +6,6 @@ from robinhood_api_wrapper import RobinhoodAPIWrapper
 if __name__ == "__main__":
     robinhood = RobinhoodAPIWrapper()
 
-    robinhood.export_watchlist_data("html")
-    robinhood.export_options_data("html")
-    robinhood.export_orders_data("html")
+    robinhood.export_watchlist_data()
+    robinhood.export_options_data()
+    robinhood.export_orders_data()

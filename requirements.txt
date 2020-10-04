@@ -1,2 +1,2 @@
 requests==2.24.0
-tablib==2.0.0
+tablib[html,xls,xlsx]==2.0.0

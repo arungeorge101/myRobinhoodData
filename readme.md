@@ -12,13 +12,6 @@ Download the repo/code to a folder on your laptop via the green code button. Ins
 pip install -r requirements.txt
 ```
 
-You'll also need to install the `tablib` export filetype add-on dependencies separately, depending on which one you want to use:
-
-```sh
-pip install 'tablib[html]'
-pip install 'tablib[xls]'
-```
-
 ### Obtaining and saving your Robinhood API token
 
 1. Login to Robinhood on your browser.
