@@ -1,6 +1,6 @@
 # MyRobinhoodData
 
-A wrapper around Robinhood API calls to export your watchlist, options history, and stocks order history to JSON, HTML, or XLS files. This also creates a summary data for your options and stock transactions. *** Summary feature is very basic as of now, and there are issues/bugs which I will fix in the coming days. Feel free to create new issues ***
+A wrapper around Robinhood API calls to export your watchlist, options history, and stocks order history to JSON, HTML, or XLS files. This also creates a summary data for your options and stock transactions. *** Summary feature is very basic as of now, and there are issues/bugs which I will fix in the coming days. Feel free to create new issue when you come across something ***
 
 ## Getting Started
 
