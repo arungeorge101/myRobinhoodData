@@ -1,0 +1,12 @@
+name: Pylint
+on: push
+
+jobs:
+  pylint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Python Pylint Github Action
+      uses: fylein/python-pylint-github-action@v4
+      with:
+        args: python -m pip install -r requirements.txt && pylint src

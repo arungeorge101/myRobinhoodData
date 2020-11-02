@@ -1,0 +1,10 @@
+# exclude everything
+.DS_Store
+results/*
+src/__pycache__
+src/domain/__pycache__
+src/helpers/__pycache__
+token.txt
+
+# exception to the rule
+!results/.gitkeep
