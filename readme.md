@@ -1,6 +1,6 @@
 # MyRobinhoodData
 
-A wrapper around Robinhood API calls to export your watchlist, options history, and stocks order history to JSON, HTML, or XLS files.
+A wrapper around Robinhood API calls to export your watchlist, options history, and stocks order history to JSON, HTML, or XLS files. This also creates a summary data for your options and stock transactions. *** Summary feature is very basic as of now, and there are issues/bugs which I will fix in the coming days. Feel free to create new issues ***
 
 ## Getting Started
 
@@ -20,42 +20,34 @@ pip install -r requirements.txt
 4. Select the first option and scroll down until you see a section titled "Request Headers".
 
 ![Walkthrough for getting Robinhood API token via Google Chrome's Network Tab](tokenWalkthrough.png)
-_You'll need the full text of that authorization sectiion. It's blacked out here for privacy._
+_You'll need the full text of that authorization section. It's blacked out here for privacy._
 
 5. Copy everything that appears after "Bearer" to your clipboard. This is your API bearer token.
 6. Paste the token into `token.example.txt`. Rename the file to `token.txt`. `.gitignore` has this file ignored for your privacy to prevent it from being committed to the repo.
 
-Alternatively, instead of saving your token to `token.txt`, you can pass in this string when initializing the RobinhoodAPIWrapper class:
+Alternatively, instead of saving your token to `token.txt`, you can pass in this string when initializing the RHDataCollector class:
+
+Open the file rh_data_collector.py and replace line 16
 
 ```py
-from robinhood_api_wrapper import RobinhoodAPIWrapper
-
-if __name__ == "__main__":
-    robinhood = RobinhoodAPIWrapper("YOUR_TOKEN_HERE")
+def __init__(self):
+        self.rhApihelper = RHApiHelper("YOUR TOKEN HERE")
 ```
 
 ## Running the project
 
-`robinhood_api_wrapper.py` is set up to export your watchlist, options history, and stocks order history to HTML or XLS files. `src/main.py` is all set up for you to export all three to HTML as-is. Whether you're exporting as HTML or XLS, JSON files for the paginated API collection data will also be generated.
+`src/rh_data_collector.py` is set up to export your watchlist, options history, and stocks order history to HTML or XLS files. `src/main.py` is all set up for you to export all three to XLS. Whether you're exporting as HTML or XLS, JSON files for the paginated API collection data will also be generated.
 
-```py
-robinhood = RobinhoodAPIWrapper()
-
-robinhood.export_watchlist_data("html")
-robinhood.export_options_data("html")
-robinhood.export_orders_data("html")
-```
+To run the code:
 
 ```sh
 python src/main.py
 ```
 
-If you want to export xls instead:
+![Show the main screen](main.png)
 
-```py
-robinhood = RobinhoodAPIWrapper()
+1. Enter 1 to export your watchlist
+2. Enter 2 to export your stock transactions and summary
+3. Enter 3 to export your option transactions and summary
+4. Enter 4 to exit
 
-robinhood.export_watchlist_data("xls")
-# xls is the default file format, so this will work too:
-robinhood.export_options_data()
-```
