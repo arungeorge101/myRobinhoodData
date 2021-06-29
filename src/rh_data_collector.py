@@ -22,6 +22,7 @@ class RHDataCollector:
             list: List of objects returned from the "results" section of these calls.
         """
         return self.rhApihelper.api_get_paginated_results("https://api.robinhood.com/watchlists/Default/")
+        #return self.rhApihelper.api_get_paginated_results("https://api.robinhood.com/midlands/lists/default/")
 
     def get_order_history(self):
         """Get a user's order history.
@@ -138,7 +139,8 @@ class RHDataCollector:
                 stock.price = order_entry["average_price"]
                 stock.totalPrice = order_entry["executed_notional"]["amount"]
                 stock.quantity = order_entry["cumulative_quantity"]
-                stock.date = order_entry["executions"][0]["settlement_date"]
+                # stock.date = order_entry["executions"][0]["settlement_date"]
+                stock.date = order_entry["last_transaction_at"]
                 stock.tranType = order_entry["side"]
 
                 stockTranData.append([stock.ticker, stock.name, stock.date, stock.quantity, stock.price, stock.tranType, stock.fees, stock.totalPrice])
