@@ -86,14 +86,14 @@ class RHDataCollector:
         optionsDict = {}
 
         for option_entry in options_history:
-            if option_entry["state"] not in ["cancelled", "confirmed", "rejected"]:
+            if option_entry["state"] not in ["cancelled", "confirmed", "rejected", "failed"]:
                 option = Option()
                 
                 option.ticker = option_entry["chain_symbol"]
                 option.price = option_entry["price"]
                 option.totalPrice = option_entry["processed_premium"]
                 option.quantity = option_entry["processed_quantity"]
-                option.date = option_entry["legs"][0]["executions"][0]["settlement_date"]
+                option.date = option_entry["legs"][0]["executions"][0]["timestamp"]
                 option.tranType = option_entry["legs"][0]["side"]
 
                 optionsExcelTranData.append([option.ticker, option.date, option.quantity, option.price, option.tranType, option.totalPrice])
@@ -129,7 +129,7 @@ class RHDataCollector:
         stockDict = {}
 
         for order_entry in order_history:
-            if order_entry["state"] not in ["cancelled", "confirmed", "rejected"]:
+            if order_entry["state"] not in ["cancelled", "confirmed", "rejected","failed"]:
                 order_entry_instrument = self.rhApihelper.api_get(order_entry["instrument"])
 
                 stock = Stock()
